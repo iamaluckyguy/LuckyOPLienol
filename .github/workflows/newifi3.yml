@@ -13,7 +13,8 @@ on:
     types: [published]
   push:
     branches:
-      - dev-19.07
+     # - dev-19.07
+       - master
     paths:
       - '.config'
   #schedule:
