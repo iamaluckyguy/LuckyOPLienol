@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: newifi3 OpenWrt
+name: newifi3 OpenWrt lucky
 
 on:
   release:
