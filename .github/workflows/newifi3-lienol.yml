@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: newifi3 OpenWrt lucky
+name: newifi3 OpenWrt Lienol lucky
 
 on:
   release:
@@ -23,23 +23,20 @@ on:
     types: [started]
 
 env:
-#  REPO_URL: https://github.com/Lienol/openwrt
-#  REPO_BRANCH: dev-19.07
-#  CONFIG_FILE: newifi3.config
-#  DIY_SH: diy.sh
-#  FREE_UP_DISK: false
-#  SSH_ACTIONS: true
-#  UPLOAD_BIN_DIR: false
-#  UPLOAD_FIRMWARE: true
-#  TZ: Asia/Shanghai
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
-  CONFIG_FILE: .config
+  REPO_URL: https://github.com/Lienol/openwrt
+  REPO_BRANCH: dev-19.07
+  CONFIG_FILE: newifi3.config
   DIY_SH: diy.sh
+  FREE_UP_DISK: false
   SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
+  UPLOAD_CONFIG_COWTRANSFER: true
+  UPLOAD_CONFIG_WETRANSFER: true
+  UPLOAD_COWTRANSFER: true
+  UPLOAD_WETRANSFER: true
   TZ: Asia/Shanghai
+
 
 jobs:
   build:
@@ -73,6 +70,22 @@ jobs:
 
     - name: Clone source code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+    
+    - name: Clone Smartinfo
+      run: git clone https://github.com/iamaluckyguy/luci-app-smartinfo.git openwrt/package/lucky/luci-app-smartinfo
+    
+    - name: Clone KoolproxyR
+      run: git clone https://github.com/jefferymvp/luci-app-koolproxyR.git openwrt/package/lucky/luci-app-koolproxyR
+      
+#Cancel this because of dependency not solved and failed
+#    - name: Clone PassWall
+#      run: git clone https://github.com/xnxy2012/luci-app-passwall.git openwrt/package/lucky/luci-app-passwall
+    
+    - name: Clone OpenClash
+      run: git clone https://github.com/vernesong/OpenClash.git openwrt/package/lucky/OpenClash
+    
+    - name: Clone OpenAppFilter
+      run: git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/lucky/OpenAppFilter
       
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -87,12 +100,30 @@ jobs:
         chmod +x $DIY_SH
         cd openwrt
         ../$DIY_SH
-        make defconfig
+        # uncomment the below if you go make menuconfig at SSH
+        # make defconfig
 
     #取消下方三行注释，可网页端ssh修改config文件，具体操作见action内部介绍
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
+    
+       - name: Upload Config File to cowtransfer
+      if: env.UPLOAD_CONFIG_COWTRANSFER == 'true' && !cancelled()
+      run: |
+        cd openwrt
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 99 -t 3 --hash --no-progress .config 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+
+    - name: Upload Config to WeTransfer
+      if: env.UPLOAD_CONFIG_WETRANSFER == 'true' && !cancelled()
+      run: |
+        cd openwrt
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wet -s -p 16 --no-progress .config 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+   
 
     - name: Download package
       id: package
@@ -132,3 +163,18 @@ jobs:
       with:
         name: OpenWrt_firmware
         path: ${{ env.FIRMWARE }}
+        
+    - name: Upload firmware to cowtransfer
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 99 -t 3 --hash --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+
+    - name: Upload firmware to WeTransfer
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        
