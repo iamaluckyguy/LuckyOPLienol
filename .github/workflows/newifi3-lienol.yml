@@ -25,7 +25,7 @@ on:
 env:
   REPO_URL: https://github.com/Lienol/openwrt
   REPO_BRANCH: dev-19.07
-  CONFIG_FILE: newifi3.config
+  CONFIG_FILE: .config
   DIY_SH: diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: true
