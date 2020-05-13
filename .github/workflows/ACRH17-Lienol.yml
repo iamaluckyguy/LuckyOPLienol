@@ -16,7 +16,7 @@ on:
      # - dev-19.07
        - master
     paths:
-      - '.config'
+      - 'acrh17.config'
   #schedule:
   #    - cron: 0 22 * * *
   watch:
@@ -25,7 +25,7 @@ on:
 env:
   REPO_URL: https://github.com/Lienol/openwrt
   REPO_BRANCH: dev-19.07
-  CONFIG_FILE: .config
+  CONFIG_FILE: acrh17.config
   DIY_SH: diy.sh
   FREE_UP_DISK: false
   SSH_ACTIONS: true
