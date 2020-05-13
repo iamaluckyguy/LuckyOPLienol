@@ -16,7 +16,7 @@ on:
      # - dev-19.07
        - master
     paths:
-      - '.config'
+      - 'newifi3.config'
   #schedule:
   #    - cron: 0 22 * * *
   watch:
@@ -25,10 +25,10 @@ on:
 env:
   REPO_URL: https://github.com/Lienol/openwrt
   REPO_BRANCH: dev-19.07
-  CONFIG_FILE: .config
+  CONFIG_FILE: newifi3.config
   DIY_SH: diy.sh
   FREE_UP_DISK: false
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_CONFIG_COWTRANSFER: true
