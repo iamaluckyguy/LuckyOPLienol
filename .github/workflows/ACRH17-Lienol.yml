@@ -71,25 +71,28 @@ jobs:
     - name: Clone source code
       run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
     
+    - name: Clone kenzok8 Packages SSR Plus, OpenClash,KoolProxyR, Passwall, SmartDNS
+      run: git clone https://github.com/kenzok8/openwrt-packages.git openwrt/package/kenzok8
+    
     - name: Clone Smartinfo
       run: git clone https://github.com/iamaluckyguy/luci-app-smartinfo.git openwrt/package/lucky/luci-app-smartinfo
     
-    - name: Clone KoolproxyR
-      run: git clone https://github.com/jefferymvp/luci-app-koolproxyR.git openwrt/package/lucky/luci-app-koolproxyR
+#    - name: Clone KoolproxyR
+#      run: git clone https://github.com/jefferymvp/luci-app-koolproxyR.git openwrt/package/lucky/luci-app-koolproxyR
       
 #Cancel this because of dependency not solved and failed
 #    - name: Clone PassWall
 #      run: git clone https://github.com/xnxy2012/luci-app-passwall.git openwrt/package/lucky/luci-app-passwall
     
-    - name: Clone OpenClash
-      run: git clone https://github.com/vernesong/OpenClash.git openwrt/package/lucky/OpenClash
+#    - name: Clone OpenClash
+#      run: git clone https://github.com/vernesong/OpenClash.git openwrt/package/lucky/OpenClash
     
     - name: Clone OpenAppFilter
       run: git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/lucky/OpenAppFilter
             
-    - name: Clone SSR
-      run: git clone https://github.com/fw876/helloworld.git openwrt/package/lucky/luci-app-ssr-plus 
-      
+#    - name: Clone SSR
+#      run: git clone https://github.com/fw876/helloworld.git openwrt/package/lucky/luci-app-ssr-plus 
+          
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
